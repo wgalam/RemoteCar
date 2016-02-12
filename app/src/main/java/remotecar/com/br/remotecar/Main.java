@@ -47,7 +47,7 @@ public class Main extends Activity {
 	static List<Integer> recList = new ArrayList<Integer>();
 	static boolean recording = false;
 	static boolean play = false;
-	boolean playing = true;
+	boolean playing = false;
 	TextView status;
 	TextView position;
 	BluetoothAdapter mBluetoothAdapter;
@@ -71,8 +71,9 @@ public class Main extends Activity {
 	public boolean reverse;
 	public int sendRateSleepTime;
 	protected PowerManager.WakeLock mWakeLock;
-	int anglebound;
+	static int anglebound;
 	static boolean byEditor = false;
+    static Button playButton;
 
 //	@Override
 //	public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -102,7 +103,7 @@ public class Main extends Activity {
 		final ToggleButton connectButton = (ToggleButton) findViewById(R.id.connect);
 		final Button blinkButton = (Button) findViewById(R.id.blink);
 		final ToggleButton recButton = (ToggleButton) findViewById(R.id.recButton);
-		final ToggleButton playButton = (ToggleButton) findViewById(R.id.playButton);
+		playButton = (Button) findViewById(R.id.playButton);
 		final Button exitButton = (Button) findViewById(R.id.exitButton);
 		final Button editButton = (Button) findViewById(R.id.editorButton);
 		aceleratorButton.setEnabled(false);
@@ -120,19 +121,13 @@ public class Main extends Activity {
 		recButton.setTextOff(null);
 		recButton.setText(null);
 		recButton.setEnabled(false);
-		playButton.setTextOn(null);
-		playButton.setTextOff(null);
 		playButton.setText(null);
-		if(!play){
-			playButton.setEnabled(false);
-			playButton.setVisibility(View.INVISIBLE);
-		}
+		playButton.setEnabled(false);
+		if(!byEditor){
+            playButton.setVisibility(View.INVISIBLE);
+        }
 		recButton.setVisibility(View.INVISIBLE);
 		connectButton.setChecked(false);
-//		List l = ((List<Integer>) getIntent().getSerializableExtra("listaAction"));
-//		if(l!=null){
-//			recList = l;
-//		}
 
 
 		anglebound = 28; //Maior angulo que o carro pode dobrar
@@ -169,26 +164,69 @@ public class Main extends Activity {
 					connectButton.setChecked(true);
 					recButton.setVisibility(View.VISIBLE);
 					editButton.setVisibility(View.VISIBLE);
+                    playButton.setEnabled(true);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		editButton.setOnTouchListener(new OnTouchListener() {
+        playButton.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+                                              try {
+//					boolean on = (playButton).isChecked();
+                                                  if (!playing) {
+                                                      playing = true;
+                                                      send = false;
+                                                      workerThread = new Thread(new Runnable() {
+                                                          public void run() {
+                                                              if (!Thread.currentThread().isInterrupted()) {
 
-			@Override
-			public boolean onTouch(View view, MotionEvent motionevent) {
-				try {
-					Intent i = new Intent(Main.this, Editor.class);
-					startActivity(i);
+                                                                  for (int i = 0; i < recList.size(); i++) {
+                                                                      try {
+                                                                          if (playing) {
+                                                                              sendData(recList.get(i));
+                                                                              if (!(recList.get(i) >= 150 && recList.get(i) <= 169) && !byEditor) {
+                                                                                  Thread.sleep(sendRateSleepTime);
+                                                                              }
+                                                                          } else {
+                                                                              return;
+                                                                          }
+                                                                      } catch (Exception e) {
+                                                                          break;
+                                                                      }
+                                                                  }
+                                                                  playing = false;
+                                                              }
+                                                          }
+                                                      });
+                                                      workerThread.start();
+                                                      workerThread.join();
+                                                      send = true;
+                                                  } else {
+                                                      playing = false;
+                                                  }
+                                              } catch (Exception e) {
+                                                  System.out.println("Lista gravada vazia");
+                                                  e.printStackTrace();
+                                              }
+                                          }
+                                      }
 
-				} catch (Exception e) {
+        );
 
-				}
-				return true;
-			}
-		});
+		editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(Main.this, Editor.class);
+                    startActivity(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 		connectButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -242,53 +280,7 @@ public class Main extends Activity {
 
 
 
-		playButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-
-				try {
-					boolean on = (playButton).isChecked();
-					if (on) {
-						send = false;
-						workerThread = new Thread(new Runnable() {
-							public void run() {
-								if (!Thread.currentThread().isInterrupted()) {
-									for(Integer b : recList){
-										try {
-											if(playing) {
-												sendData(b);
-												System.out.println(b);
-												if(!(b >= 150 && b <= 169) && !byEditor) {
-													Thread.sleep(sendRateSleepTime);
-												}
-											}else{
-												throw new Exception();
-											}
-										}catch (Exception e) {
-											break;
-										}
-									}
-								}
-							}
-						});
-						workerThread.start();
-					}else{
-						playing = false;
-					}
-					try {
-						workerThread.join();
-					}catch (InterruptedException e){
-						//Donothing
-					}
-					playing = true;
-					send = true;
-					playButton.setChecked(false);
-				}catch (Exception e){
-					System.out.println("Lista gravada vazia");
-				}
-
-			}
-		});
 
 		// Turbo Button
 
@@ -750,15 +742,18 @@ public class Main extends Activity {
 				//Controla a direcao
 			
 				float aux = mSensorY;
-				if(aux >= -9 ){
+
+				if(aux*4 > -anglebound ){
 					if(aux < 0){
 						//Turn Left
 						m.sendData( (int)(50 + Math.abs(aux) * 4));
+
 					}else if(aux >= -0.2 && aux <= 0.2 ){
 						//Trun Center
 						m.sendData(100); 
-					}else if(aux < 9){
+					}else if(aux*4 < anglebound){
 						//Turn Right
+
 						m.sendData((int) (100 + aux * 4));
 					}else{
 						m.sendData(100+anglebound);

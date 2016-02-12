@@ -22,6 +22,11 @@ public class Editor extends AppCompatActivity {
         setContentView(R.layout.activity_editor);
     final EditText program = (EditText) findViewById(R.id.program);
 
+        if(Main.recList!= null){
+            for(Integer i : Main.recList){
+                addToEnd(program,""+i);
+            }
+        }
         final Button nitroButton = (Button) findViewById(R.id.button6);
         nitroButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,9 +53,12 @@ public class Editor extends AppCompatActivity {
         backspaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (program.getText().toString().length() > 3) {
-                    program.setText(program.getText().toString().substring(0, program.getText().toString().length() - 4));
+                String [] lst = program.getText().toString().split("!");
+                String str = "";
+                for(int i = 1; i < lst.length-1; i++){
+                    str+="!"+ lst[i];
                 }
+                program.setText(str);
             }
         });
 
@@ -74,10 +82,36 @@ public class Editor extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (steeringBar.getProgress() < 50) {
-                    addToEnd(program, "0" + (50 + steeringBar.getProgress()));
-                } else {
-                    addToEnd(program, "" + (50 + steeringBar.getProgress()));
+                if(steeringBar.getProgress() < 50){
+                    //Dobrar Esquerda
+                    if((50 + (50 - steeringBar.getProgress()))!=100){
+                        if((50 - steeringBar.getProgress())>Main.anglebound){
+                            addToEnd(program, "" + (50 + Main.anglebound));
+                        }else{
+                            addToEnd(program, "" + (50 + (50 - steeringBar.getProgress())));
+                        }
+
+                    }else{
+                        addToEnd(program,""+2);
+                    }
+                }else{
+                    if(steeringBar.getProgress() > 50){
+                        //Dobrar Direita
+                        if((100 + (steeringBar.getProgress()-50))!=150){
+                            if((steeringBar.getProgress()-50) > Main.anglebound){
+                                addToEnd(program, "" + (100 + Main.anglebound));
+                            }else{
+                                addToEnd(program, "" + (100 + (steeringBar.getProgress()-50)));
+                            }
+
+                        }else{
+                            addToEnd(program,""+3);
+                        }
+
+                    }else{
+                        //CEntralizar
+                        addToEnd(program, "100");
+                    }
                 }
 
 //                textView.setText("Covered: " + progress + "/" + seekBar.getMax());
@@ -209,20 +243,21 @@ public class Editor extends AppCompatActivity {
                 try {
                     List<Integer> list = new ArrayList<Integer>();
 
-                    for(String str : program.getText().toString().split("!")){
-                        if(!str.equals("")){
+                    for(String str : program.getText().toString().split("!")) {
+                        if (!str.equals("")) {
                             list.add(Integer.parseInt(str));
                         }
                     }
-                    list.add(007);
-                    list.add(8);
+                    list.add(7);
+                    light = false;
+                    forward = true;
                     Main.recList = list;
                     Main.play = true;
-                    Intent i = new Intent(Editor.this, Main.class);
-//                    i.putExtra("listaAction", (Serializable) list);
                     Main.byEditor = true;
-                    startActivity(i);
+                    Main.playButton.setVisibility(View.VISIBLE);
                     Editor.this.finish();
+
+
                 } catch (Exception e) {
 
                 }
@@ -234,8 +269,8 @@ public class Editor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Intent i = new Intent(Editor.this, Main.class);
-                    startActivity(i);
+                    light = false;
+                    forward = true;
                     Editor.this.finish();
                 } catch (Exception e) {
 
@@ -245,8 +280,8 @@ public class Editor extends AppCompatActivity {
 
     }
 
-    protected void addToEnd(EditText seek, String c){
-        seek.setText(seek.getText()+"!"+c);
+    protected void addToEnd(EditText prog, String c){
+        prog.setText(prog.getText()+"!"+c);
     }
 
 }

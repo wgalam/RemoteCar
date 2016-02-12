@@ -51,7 +51,7 @@
             android:layout_toRightOf="@+id/connect"
             android:layout_toEndOf="@+id/connect" />
 
-        <ToggleButton
+        <Button
             android:layout_width="80dp"
             android:layout_height="70dp"
             android:id="@+id/playButton"
