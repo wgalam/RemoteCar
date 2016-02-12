@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">RemoteCar</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">RemoteCar</string>
+    <string name="out"></string>
+    <string name="scan">Connect</string>
+    <string name="send">Send</string>
+    <string name="close">Desconectar</string>
+    <string name="status">Status:</string>
+    <string name="acelerator">Acelerar</string>
+    <string name="reverse">Reverso</string>
+    <string name="turbo">TURBO</string>
+    <string name="lightson">Lights ON</string>
+    <string name="lightsoff">Lights OFF</string>
+    <string name="blink">Sinal de Luz</string>
+    <string name="prog1">PROG1</string>
+    <string name="prog2">PROG2</string>
+    <string name="PROG3">PROG3</string>
+    <string name="edit">EDITOR</string>
+    <string name="rec">GRAVADOR</string>
+    <string name="title_activity_delete">delete</string>
+    <string name="title_activity_deletethis">deletethis</string>
+
+    <string name="title_activity_editor">EditorActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@drawable/assoalho3">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_gravity="center_horizontal">
+
+        <ToggleButton
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:id="@+id/connect"
+            android:background="@drawable/bluetooth_button"
+            android:layout_alignBottom="@+id/recButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ToggleButton
+            android:id="@+id/lights"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/light_button"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/exitButton"
+            android:background="@drawable/exit"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/playButton"
+            android:layout_toEndOf="@+id/playButton"
+            android:layout_marginLeft="47dp"
+            android:layout_marginStart="47dp" />
+
+        <ToggleButton
+            android:layout_width="100dp"
+            android:layout_height="90dp"
+            android:text="New ToggleButton"
+            android:id="@+id/recButton"
+            android:background="@drawable/rec_button"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/connect"
+            android:layout_toEndOf="@+id/connect" />
+
+        <ToggleButton
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:id="@+id/playButton"
+            android:background="@drawable/play_button"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/recButton"
+            android:layout_toEndOf="@+id/recButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editor"
+            android:id="@+id/editorButton"
+            android:layout_alignBottom="@+id/exitButton"
+            android:layout_toLeftOf="@+id/lights"
+            android:layout_toStartOf="@+id/lights"
+            android:background="@android:color/background_light" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="0.74">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/blink"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/light_sign"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="bottom"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/acelerator"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/acelerator_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            tools:ignore="NotSibling" />
+
+        <Button
+            android:id="@+id/reverse"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/brake_button"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/turbo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nitro_button"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+</LinearLayout>
