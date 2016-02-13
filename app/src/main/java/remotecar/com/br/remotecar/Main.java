@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -417,26 +418,30 @@ public class Main extends Activity {
 //			}
 //		});
 
+
+
 		//Acelerator button
 		aceleratorButton.setOnTouchListener(new OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View view, MotionEvent motionevent) {
-				int action = motionevent.getAction();
-				if (action == MotionEvent.ACTION_DOWN) {
-					acelerate = true;
-				} else if (action == MotionEvent.ACTION_UP) {
-					acelerate = false;
-					try {
-						sendData((byte) 7); //Parar motor
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}//end else
-				return false;
-			} //end onTouch
-		}); //end b my button
+            @Override
+            public boolean onTouch(View view, MotionEvent motionevent) {
+                int action = motionevent.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    acelerate = true;
+                } else if (action == MotionEvent.ACTION_UP) {
+                    acelerate = false;
+                    try {
+                        sendData((byte) 7); //Parar motor
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }//end else
+                return false;
+            } //end onTouch
+        }); //end b my button
+
+
 
 
 
@@ -672,7 +677,14 @@ public class Main extends Activity {
 			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
 				return;			 
 			mSensorX = event.values[2];
-			mSensorY = event.values[1];
+            float y1 = event.values[1];
+            float y2 = event.values[2];
+			if(y1 < 0){
+                 mSensorY = y1-y2/6;
+            }else{
+                mSensorY = y1+y2/6;
+            }
+
 			mSensorZ = event.values[0];
 			//O trcho abaixo será excluido
 			position.setText(mSensorX+"\n"+mSensorY+"\n"+mSensorZ);
